@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-	// The range of velocities at which the ball can travel in the x direction.
-	private Range<float> xVelocityRange = new Range<float>(-20, 20);
+    // The range of velocities at which the ball can travel in the x direction.
+    private Range<float> xVelocityRange = new Range<float>(-20, 20);
 
     // The range of velocities at which the ball can travel in the y direction.
     private Range<float> yVelocityRange = new Range<float>(15, 40);
 
     // Controls the amount of spin the paddle puts on the ball.
-    private int paddleSpin = 750;
-	
+    float paddleSpin = 750f;
+
 	// Holds information about the game's state.
 	public GameState state;
 	
@@ -41,30 +41,20 @@ public class Ball : MonoBehaviour
         float ySign = Mathf.Sign (rb.velocity.y);
 
         // If the ball is travelling slower than the minimum x velocity...
-        if (Mathf.Abs(rb.velocity.x) < xVelocityRange.Minimum)
-        {
+
             // ...set the ball's velocity to the minimum x velocity.
-            rb.velocity = new Vector3(xVelocityRange.Minimum * xSign, rb.velocity.y, rb.velocity.z);
-        }
+
         // Otherwise, if the ball is travelling faster than the maximum x velocity...
-        else if (Mathf.Abs(rb.velocity.x) > xVelocityRange.Maximum)
-        {
+
             // ...set the ball's velocity to the maximum x velocity.
-            rb.velocity = new Vector3(xVelocityRange.Maximum * xSign, rb.velocity.y, rb.velocity.z);
-        }
 
         // If the ball is travelling slower than the minimum y velocity...
-        if (Mathf.Abs (rb.velocity.y) < yVelocityRange.Minimum)
-		{
+
             // ...set the ball's velocity to the minimum y velocity.
-            rb.velocity = new Vector3 (rb.velocity.x, yVelocityRange.Minimum * ySign, rb.velocity.z);	
-		}
+
 		// Otherwise, if the ball is travelling faster than the maximum y velocity...
-		else if (Mathf.Abs (rb.velocity.y) > yVelocityRange.Maximum)
-		{
+
             // ...set the ball's velocity to the maximum y velocity.
-            rb.velocity = new Vector3 (rb.velocity.x, yVelocityRange.Maximum * ySign, rb.velocity.z);	
-		}
     }
 	
 	/// <summary>
@@ -73,7 +63,6 @@ public class Ball : MonoBehaviour
 	private void CheckDeadBall ()
 	{
 		// If the ball is out of bounds, update the game state!
-		if (transform.position.y < -15 && state.CurrentState == GameState.State.Play) state.NextState ();
 	}
 	
 	/// <summary>
@@ -82,14 +71,10 @@ public class Ball : MonoBehaviour
 	private void CheckServe ()
 	{
 		// Check to see if the ball is out of play...
-		if (state.CurrentState != GameState.State.Play)
-		{			
+
 			// Set the ball's velocity to zero.
-			GetComponent<Rigidbody>().velocity = new Vector3(0f, 0f, 0f);
 			
 			// Check to see if the player has served the ball...
-			if (Input.GetButton("Serve")) Serve ();
-		}	
 	}
 	
 	/// <summary>
@@ -98,13 +83,10 @@ public class Ball : MonoBehaviour
 	private void Serve ()
 	{
 		// Update the current state.
-		state.NextState ();
 		
 		// Place the ball in center court.
-		transform.position = new Vector3(0f, 0f, 0f);
 
         // Set the ball in motion!
-        GetComponent<Rigidbody>().velocity = new Vector3(Random.Range(xVelocityRange.Minimum, xVelocityRange.Maximum) / 2f, yVelocityRange.Minimum * -1f, 0f);
 	}
 	
 	/// <summary>
@@ -133,7 +115,6 @@ public class Ball : MonoBehaviour
 		if (player != null)
 		{
 			// Add the appropriate force to the ball.
-			GetComponent<Rigidbody>().AddForce(CalculateForce (player.transform.position.x), 0, 0);	
 			
 			// Play the paddle collision sound.
 			sounds.PlaySound (1);
@@ -144,7 +125,6 @@ public class Ball : MonoBehaviour
 			if (collision.transform.parent != null)
 			{
 				// Destroy the block! AHAHA!!
-				Destroy (collision.gameObject);	
 				
 				// Play the block sound!
 				sounds.PlaySound (0);
